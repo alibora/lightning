@@ -300,6 +300,14 @@ char *dbmigrations[] = {
     ", rawtx BLOB"
     ", PRIMARY KEY (id)"
     ");",
+    "CREATE TABLE channeltxs ("
+    "  id INTEGER," /* The id serves as insertion order and short ID */
+    "  channel_id INTEGER REFERENCES channels(id) ON DELETE CASCADE,"
+    "  type INTEGER,"
+    "  transaction_id BLOB REFERENCES transactions(id),"
+    "  input_num INTEGER," /* Only used by the txo_watch, 0 if txwatch */
+    "  PRIMARY KEY(id)"
+    ");",
     NULL,
 };
 
