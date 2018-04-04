@@ -9,7 +9,6 @@
 #include <lightningd/peer_control.h>
 #include <lightningd/subd.h>
 #include <lightningd/watch.h>
-#include <onchaind/gen_onchain_wire.h>
 #include <onchaind/onchain_wire.h>
 
 /* We dump all the known preimages when onchaind starts up. */
@@ -335,10 +334,9 @@ static void onchain_error(struct channel *channel,
 
 /* With a reorg, this can get called multiple times; each time we'll kill
  * onchaind (like any other owner), and restart */
-enum watch_result funding_spent(struct channel *channel,
-				const struct bitcoin_tx *tx,
-				size_t input_num UNUSED,
-				const struct block *block)
+enum watch_result onchaind_funding_spent(struct channel *channel,
+					 const struct bitcoin_tx *tx,
+					 u32 blockheight)
 {
 	u8 *msg;
 	struct bitcoin_txid our_last_txid;
@@ -408,7 +406,7 @@ enum watch_result funding_spent(struct channel *channel,
 				  &channel->channel_info.theirbase.htlc,
 				  &channel->channel_info.theirbase.delayed_payment,
 				  tx,
-				  block->height,
+				  blockheight,
 				  /* FIXME: config for 'reasonable depth' */
 				  3,
 				  channel->last_htlc_sigs,
