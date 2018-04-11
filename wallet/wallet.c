@@ -2316,7 +2316,7 @@ struct channeltx *wallet_channeltxs_get(struct wallet *w, const tal_t *ctx,
 	stmt = db_prepare(w->db, "SELECT type, blockheight, rawtx, input_num "
 			  "FROM channeltxs c JOIN transactions t ON t.id == c.transaction_id "
 			  "WHERE channel_id = ? "
-			  "ORDER BY id ASC;");
+			  "ORDER BY c.id ASC;");
 	sqlite3_bind_int(stmt, 1, channel_id);
 
 	while (sqlite3_step(stmt) == SQLITE_ROW) {
